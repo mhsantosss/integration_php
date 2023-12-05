@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_server
+    environment:
+      MYSQL_ROOT_PASSWORD: sua_senha_root
+      MYSQL_DATABASE: seu_banco_de_dados
+      MYSQL_USER: seu_usuario
+      MYSQL_PASSWORD: sua_senha
+
+  php:
+    image: php:7.4-fpm
+    container_name: php_server
+    volumes:
+      - ./seu_projeto:/var/www/html
+    depends_on:
+      - mysql
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - "8080:80"
+    volumes:
+      - ./seu_projeto:/var/www/html
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - php
